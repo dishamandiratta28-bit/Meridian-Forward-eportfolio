@@ -78,7 +78,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-pages = ["The journey", "What we did", "How we did it", "Outcome", "Team progress"]
+pages = ["The journey", "What we did", "How we did it", "Outcome", "Team progress", "Contributions", "Evidence appendix"]
 selected = st.radio("Navigate", pages, horizontal=True, label_visibility="collapsed")
 
 # ---------- Hero ----------
@@ -310,6 +310,101 @@ elif selected == "Team progress":
             st.markdown(f'<div class="metric"><div class="metric-label">{label}</div><div class="metric-value">{value}</div></div>', unsafe_allow_html=True)
     st.progress(completed / total)
     st.caption("Progress is based on the milestone statuses you set. This prototype keeps edits for the current session.")
+
+elif selected == "Contributions":
+    st.markdown('<div class="eyebrow">05 / CONTRIBUTIONS & ACCOUNTABILITY</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-title" style="font-size:3.1rem">Five people. A visible work trail.</div>', unsafe_allow_html=True)
+    st.caption("Based on the team's account. Dates and artifacts must be verified; none are invented.")
+    members = {
+        "Disha Mandiratta": ["Created AS1 presentation", "Created AS2 presentation", "Created AS3 presentation and later rectified it", "Developed the Streamlit ePortfolio"],
+        "Karan Siwas": ["Made relevant changes and redesigned AS1 and AS2 presentations", "Worked on AS3 and incorporated relevant changes", "Created decentralisation diagram and workflow chart"],
+        "Divyanshu Gupta": ["Checked presentation content"],
+        "Mahak Sahu": ["Checked presentation content"],
+        "Tamanna Joshi": ["Checked presentation content"],
+    }
+    for name, tasks in members.items():
+        with st.container(border=True):
+            st.markdown(f"### {name}")
+            for task in tasks: st.markdown(f"- {task}")
+    st.markdown("#### Dated contribution log")
+    st.info("Replace ‘Date to be confirmed’ with a date only when supported by file history, messages, or meeting records.")
+    rows = [
+        ["Date to be confirmed", "Disha Mandiratta", "AS1 presentation", "Created presentation", "Add file/version link"],
+        ["Date to be confirmed", "Disha Mandiratta", "AS2 presentation", "Created presentation", "Add file/version link"],
+        ["Date to be confirmed", "Karan Siwas", "AS1 / AS2 presentations", "Relevant changes and redesign", "Add revised file link"],
+        ["Date to be confirmed", "Disha Mandiratta", "AS3 presentation", "Created and later rectified presentation", "Add file/version link"],
+        ["Date to be confirmed", "Karan Siwas", "AS3 presentation", "Made relevant changes", "Add revised file link"],
+        ["Date to be confirmed", "Karan Siwas", "Decentralisation / workflow", "Created diagram and workflow chart", "Add diagram link"],
+        ["Date to be confirmed", "Disha Mandiratta", "Streamlit ePortfolio", "Developed portfolio", "Add repository/app link"],
+        ["Date to be confirmed", "Divyanshu Gupta", "Presentations", "Checked content", "Add evidence if available"],
+        ["Date to be confirmed", "Mahak Sahu", "Presentations", "Checked content", "Add evidence if available"],
+        ["Date to be confirmed", "Tamanna Joshi", "Presentations", "Checked content", "Add evidence if available"],
+    ]
+    df = pd.DataFrame(rows, columns=["Date", "Member", "Deliverable", "Action", "Evidence / link"])
+    if "contribution_log" not in st.session_state: st.session_state.contribution_log = df
+    st.session_state.contribution_log = st.data_editor(st.session_state.contribution_log, use_container_width=True, hide_index=True, num_rows="dynamic", key="contrib_editor")
+    st.download_button("Download contribution log CSV", st.session_state.contribution_log.to_csv(index=False).encode(), "team_contribution_log.csv", "text/csv")
+    st.markdown("#### Learning and revisions")
+    st.caption("Record real feedback, what changed, why, date, and supporting evidence. Do not invent learning outcomes.")
+    rev = pd.DataFrame([["Date to be confirmed", "To be added", "To be completed by team", "Reasoned response / learning", "Add evidence link"]], columns=["Date", "Trigger / feedback", "What changed", "Reason / learning", "Evidence link"])
+    if "revision_log" not in st.session_state: st.session_state.revision_log = rev
+    st.session_state.revision_log = st.data_editor(st.session_state.revision_log, use_container_width=True, hide_index=True, num_rows="dynamic", key="revision_editor")
+    st.download_button("Download revision log CSV", st.session_state.revision_log.to_csv(index=False).encode(), "learning_revision_log.csv", "text/csv")
+    st.markdown("#### Corporate mentor engagement")
+    st.warning("Status: NOT YET RECORDED. Do not imply contact, guidance, or approval until it actually occurs.")
+    mentor = pd.DataFrame([["Faculty-approved question", "Enter exact approved question"], ["Mentor name", "Rashi Varshney — confirm intended mentor"], ["Engagement status", "Not yet recorded; confirm current status"], ["Contact date", "Pending"], ["Guidance received", "Pending — do not invent"], ["Team response and rationale", "Pending until guidance is received"], ["Revision / follow-up date", "Pending"]], columns=["Field", "Record"])
+    st.dataframe(mentor, use_container_width=True, hide_index=True)
+
+elif selected == "Evidence appendix":
+    st.markdown('<div class="eyebrow">06 / EVIDENCE APPENDIX</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-title" style="font-size:3.1rem">Show the working.</div>', unsafe_allow_html=True)
+    st.caption("Figures currently used in the portfolio. Attach the controlling workbook and source-page references before final submission.")
+    st.markdown("#### Calculation trail")
+    calc = pd.DataFrame([
+        ["Data preparation shortage", "Case input", 352, "Attach workbook reference"],
+        ["Quality assurance shortage", "Case input", 96, "Attach workbook reference"],
+        ["Legacy systems shortage", "Case input", 96, "Attach workbook reference"],
+        ["Total baseline shortage", "352 + 96 + 96", 544, "Calculated"],
+        ["Spare capacity", "Case input", 172, "Attach workbook reference"],
+        ["Net deficit", "544 − 172", 372, "Calculated"],
+        ["Conditional data preparation residual", "Scenario value", 80, "Not approved; gates pending"],
+        ["Conditional QA residual", "Scenario value", 72, "Not approved; gates pending"],
+        ["Conditional legacy residual", "Scenario value", 64, "Not approved; gates pending"],
+        ["Total conditional residual", "80 + 72 + 64", 216, "Not ready capacity"],
+    ], columns=["Item", "Calculation / input", "Hours", "Status"])
+    st.dataframe(calc, use_container_width=True, hide_index=True)
+    st.markdown("#### Conditional vendor costs")
+    costs = pd.DataFrame([
+        ["Data preparation", 1, 160, 550, "1 × 160 × 550", 88000],
+        ["Quality assurance", 1, 160, 800, "1 × 160 × 800", 128000],
+        ["Legacy systems", 1, 160, 1000, "1 × 160 × 1,000", 160000],
+    ], columns=["Role", "Workers", "Hours per worker", "Rate/hour (₹)", "Calculation", "Cost (₹)"])
+    st.dataframe(costs, use_container_width=True, hide_index=True)
+    a, b, c = st.columns(3)
+    a.metric("Conditional total", "₹3,76,000")
+    b.metric("Budget cap", "₹6,00,000")
+    c.metric("Headroom under cap", "₹2,24,000")
+    st.caption("Baseline vendor cost is ₹6,40,000: ₹40,000 above the cap. The ₹3.76 lakh scenario is conditional, not approved.")
+    st.markdown("#### Readiness gates")
+    st.dataframe(pd.DataFrame([["Authorised access", "Not confirmed", "Do not count capacity as ready"], ["Workload / legacy cover", "Not confirmed", "Do not count capacity as ready"], ["Decision authority and supervision", "Not confirmed", "Do not count capacity as ready"]], columns=["Gate", "Status", "Effect"]), use_container_width=True, hide_index=True)
+    st.markdown("#### Assumption and source register")
+    assumptions = pd.DataFrame([
+        ["A01", "One vendor worker per role; 160 hours each", "Basis of cost scenario", "Case calculations; attach workbook", "Scenario assumption, not approval"],
+        ["A02", "102.4 effective hours per worker in residual-gap scenario", "Used for conditional capacity scenario", "AS2 case working; attach workbook", "Scenario assumption"],
+        ["A03", "All three readiness gates must clear", "Prevents counting unready hours", "Case notes P063, P168, P183–P184, P188", "Gates not confirmed"],
+        ["A04", "Permanent hires add zero pilot hours due to 8-week lead time vs 4-week pilot", "Hiring supports later supply", "Case planning constraint; attach source page", "Case constraint"],
+        ["A05", "Selection tests / weighted criteria are proposals, not existing policy", "Approving owner required", "Q6.01; Q6.05 teaching illustration", "Proposed; approval required"],
+        ["A06", "Salary, fee and induction cash costs not supplied", "Do not fabricate costs", "Q6.04", "Not supplied"],
+        ["A07", "600-position request not accepted as submitted", "Separate long-term plan from pilot", "P044, P051, Q5.01", "Case limitation"],
+    ], columns=["ID", "Assumption / limitation", "Impact / rationale", "Source reference", "Status"])
+    st.dataframe(assumptions, use_container_width=True, hide_index=True)
+    st.caption("Starter register based on available case notes; not the complete A01–A19 register. Add remaining entries from the controlling workbook; do not guess.")
+    st.markdown("#### Proposed role specifications")
+    st.dataframe(pd.DataFrame([["Data preparation", "Anomalous customer-data pack and validation explanation", "Proposal only; approving owner required"], ["Quality assurance", "Validation task and judgement questions", "Proposal only; approving owner required"], ["Legacy systems", "Teach-back of contract exception / legacy process", "Proposal only; approving owner required"]], columns=["Role", "Proposed work sample", "Status"]), use_container_width=True, hide_index=True)
+    st.markdown("#### Supporting sources to attach")
+    st.write("Add the controlling AS2 case workbook, source-page references, final AS1/AS2/AS3 presentations, decentralisation diagram, workflow chart, and dated review evidence to this repository or link an approved accessible location.")
+    st.warning("Mentor contact and guidance are not recorded yet. Keep this pending until actual engagement occurs.")
+
 
 st.write("")
 st.markdown(
